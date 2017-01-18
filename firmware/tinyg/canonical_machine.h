@@ -90,6 +90,7 @@ typedef struct GCodeState {				// Gcode model state - used by model, planning an
 	float minimum_time;					// minimum time possible for move given axis constraints
 	float feed_rate; 					// F - normalized to millimeters/minute or in inverse time mode
 
+	uint8_t spindle_active_dir;			// Spindle active pin - Active Low or Active High
 	float spindle_speed;				// in RPM
 	float parameter;					// P - parameter used for dwell time in seconds, G10 coord select...
 
@@ -494,6 +495,11 @@ enum cmCoolantState {				// mist and flood coolant states
 enum cmDirection {					// used for spindle and arc dir
 	DIRECTION_CW = 0,
 	DIRECTION_CCW
+};
+
+enum cmSpindleActiveDir {			// used for spindle active low/high dir
+	SPINDLE_ACTIVE_HIGH = 0,
+	SPINDLE_ACTIVE_LOW
 };
 
 enum cmAxisMode {					// axis modes (ordered: see _cm_get_feed_time())

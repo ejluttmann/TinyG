@@ -50,6 +50,14 @@ void cm_spindle_init()
 
     pwm_set_freq(PWM_1, pwm.c[PWM_1].frequency);
     pwm_set_duty(PWM_1, pwm.c[PWM_1].phase_off);
+    
+	// make sure spindle is turned off at init
+	if (cm.gm.spindle_active_dir == SPINDLE_ACTIVE_LOW) {
+		gpio_set_bit_on(SPINDLE_BIT);	
+	} else {
+		gpio_set_bit_off(SPINDLE_BIT);	
+	}
+
 }
 
 /*
@@ -103,24 +111,52 @@ static void _exec_spindle_control(float *value, float *flag)
 
  #ifdef __AVR
 	if (spindle_mode == SPINDLE_CW) {
-		gpio_set_bit_on(SPINDLE_BIT);
-		gpio_set_bit_off(SPINDLE_DIR);
+ 	    if (cm.gm.spindle_active_dir == SPINDLE_ACTIVE_LOW) {
+			gpio_set_bit_off(SPINDLE_BIT);
+			gpio_set_bit_on(SPINDLE_DIR);
+		} else {
+			gpio_set_bit_on(SPINDLE_BIT);
+			gpio_set_bit_off(SPINDLE_DIR);
+		}
 	} else if (spindle_mode == SPINDLE_CCW) {
-		gpio_set_bit_on(SPINDLE_BIT);
-		gpio_set_bit_on(SPINDLE_DIR);
+ 	    if (cm.gm.spindle_active_dir == SPINDLE_ACTIVE_LOW) {
+			gpio_set_bit_off(SPINDLE_BIT);
+			gpio_set_bit_off(SPINDLE_DIR);
+		} else {
+			gpio_set_bit_on(SPINDLE_BIT);
+			gpio_set_bit_on(SPINDLE_DIR);
+		}
 	} else {
-		gpio_set_bit_off(SPINDLE_BIT);	// failsafe: any error causes stop
+ 	    if (cm.gm.spindle_active_dir == SPINDLE_ACTIVE_LOW) {
+			gpio_set_bit_on(SPINDLE_BIT);	// failsafe: any error causes stop
+		} else {
+			gpio_set_bit_off(SPINDLE_BIT);	// failsafe: any error causes stop
+		}
 	}
 #endif // __AVR
 #ifdef __ARM
 	if (spindle_mode == SPINDLE_CW) {
-		spindle_enable_pin.set();
-		spindle_dir_pin.clear();
+ 	    if (cm.gm.spindle_active_dir == SPINDLE_ACTIVE_LOW) {
+			spindle_enable_pin.clear();
+			spindle_dir_pin.set();
+		} else {
+			spindle_enable_pin.set();
+			spindle_dir_pin.clear();
+		}
 	} else if (spindle_mode == SPINDLE_CCW) {
-		spindle_enable_pin.set();
-		spindle_dir_pin.set();
+ 	    if (cm.gm.spindle_active_dir == SPINDLE_ACTIVE_LOW) {
+			spindle_enable_pin.clear();
+			spindle_dir_pin.clear();
+		} else {
+			spindle_enable_pin.set();
+			spindle_dir_pin.set();
+		}
 	} else {
-		spindle_enable_pin.clear();	// failsafe: any error causes stop
+ 	    if (cm.gm.spindle_active_dir == SPINDLE_ACTIVE_LOW) {
+			spindle_enable_pin.set();	// failsafe: any error causes stop
+		} else {
+			spindle_enable_pin.clear();	// failsafe: any error causes stop
+		}
 	}
 #endif // __ARM
 
