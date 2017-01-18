@@ -746,6 +746,7 @@ stat_t cm_set_xjh(nvObj_t *nv);			// set jerk homing with 1,000,000 correction
 	void cm_print_ma(nvObj_t *nv);
 	void cm_print_ms(nvObj_t *nv);
 	void cm_print_st(nvObj_t *nv);
+	void cm_print_sa(nvObj_t *nv);
 
 	void cm_print_am(nvObj_t *nv);		// axis print functions
 	void cm_print_fr(nvObj_t *nv);
@@ -803,6 +804,7 @@ stat_t cm_set_xjh(nvObj_t *nv);			// set jerk homing with 1,000,000 correction
 	#define cm_print_ma tx_print_stub
 	#define cm_print_ms tx_print_stub
 	#define cm_print_st tx_print_stub
+	#define cm_print_sa tx_print_stub
 
 	#define cm_print_am tx_print_stub		// axis print functions
 	#define cm_print_fr tx_print_stub
